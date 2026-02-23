@@ -79,3 +79,19 @@ st.plotly_chart(fig, use_container_width=True)
 # 데이터 테이블
 with st.expander("📝 분석 원천 데이터 확인"):
     st.dataframe(df_final[['date', 'agency', 'bid_rate', 'weight']].head(50), use_container_width=True)
+
+# 파일 업로더 위젯 추가
+uploaded_file = st.sidebar.file_uploader("📂 분석할 엑셀/CSV 파일을 선택하세요", type=['csv', 'xlsx'])
+
+if uploaded_file is not None:
+    # 사용자가 파일을 올리면 해당 데이터 읽기
+    if uploaded_file.name.endswith('.csv'):
+        df = pd.read_csv(uploaded_file)
+    else:
+        df = pd.read_excel(uploaded_file)
+    
+    # 여기서부터는 업로드된 df를 바탕으로 가중치 및 사정률 실시간 계산
+    st.success("데이터가 성공적으로 로드되었습니다!")
+else:
+    # 파일을 올리기 전에는 안내 문구 표시
+    st.info("좌측 사이드바에서 데이터를 업로드하면 실시간 예측이 시작됩니다.")
